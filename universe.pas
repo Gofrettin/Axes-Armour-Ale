@@ -19,7 +19,17 @@ type
     dlevel: array[1, 1..MAXROWS, 1..MAXCOLUMNS] of tile;
   end;
 
+var
+  dungeonList : array of dungeonLayout;
+
+procedure createNewDungeon;
+
 implementation
+
+procedure createNewDungeon;
+begin
+
+end;
 
 end.
 
