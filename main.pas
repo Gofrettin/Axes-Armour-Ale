@@ -12,7 +12,7 @@ unit main;
 interface
 
 uses
-  Classes, Forms, ComCtrls, Graphics, SysUtils, map, player,
+  Classes, Forms, ComCtrls, Graphics, SysUtils, universe, map, player,
   globalutils, Controls, LCLType, ui, items, player_inventory;
 
 type
@@ -442,6 +442,10 @@ begin
   killer := 'empty';
   playerTurn := 0;
   map.mapType := 0;
+
+  universe.createNewDungeon(map.mapType);
+
+
   map.setupMap;
   map.setupTiles;
   entities.setupEntities;

@@ -16,7 +16,7 @@ type
     uniqueID: smallint;
     (* human-readable name of dungeon *)
     title: string;
-    (* is this a cave / dungeon etc *)
+    (* Type of map: 0 = cave tunnels, 1 = blue grid-based dungeon, 2 = cavern, 3 = Bitmask dungeon *)
     dungeonType: smallint;
     (* total number of floors *)
     totalDepth: byte;
@@ -33,11 +33,11 @@ type
 var
   dungeonList: array of dungeonLayout;
 
-procedure createNewDungeon;
+procedure createNewDungeon(mapType: byte);
 
 implementation
 
-procedure createNewDungeon;
+procedure createNewDungeon(mapType: byte);
 var
   i: byte;
 begin
@@ -51,6 +51,13 @@ begin
   for i := 1 to 10 do
   begin
     isVisited[i] := False;
+  end;
+  (* select which type of dungeon to generate *)
+  case mapType of
+    0: cave.generate;
+    1: grid_dungeon.generate;
+    2: cavern.generate;
+    3: bitmask_dungeon.generate;
   end;
 
 end;

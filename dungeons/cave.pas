@@ -23,9 +23,6 @@ var
   startX, startY: smallint;
   (* start creating corridors once this rises above 1 *)
   roomCounter: smallint;
-  (* TESTING - Write cave to text file *)
-  filename: ShortString;
-  myfile: Text;
 
 (* Draw straight line between 2 points *)
 procedure drawLine(x1, y1, x2, y2: smallint);
@@ -40,7 +37,7 @@ procedure createCorridor(fromX, fromY, toX, toY: smallint);
 (* Create a room *)
 procedure createRoom(gridNumber: smallint);
 (* Generate a cave *)
-procedure generate;
+procedure generate(totalFloors: byte);
 (* sort room list in order from left to right *)
 procedure leftToRight;
 
@@ -280,10 +277,11 @@ begin
   end;
 end;
 
-procedure generate;
+procedure generate(totalFloors: byte);
 var
-  pillars: byte;
+  pillars, floorCounter: byte;
 begin
+  floorCounter := 0;
   pillars := 0;
   roomCounter := 0;
   // initialise the array
@@ -420,46 +418,13 @@ begin
     caveArray[r][c] := '*';
   end;
 
-  (* set player start coordinates, and make sure it isn't a pillar *)
+  (* set player start coordinates, and set it to stairs *)
   caveArray[globalutils.currentDgncentreList[1].y]
-    [globalutils.currentDgncentreList[1].x] := ':';
+    [globalutils.currentDgncentreList[1].x] := '>';
   map.startX := globalutils.currentDgncentreList[1].x;
   map.startY := globalutils.currentDgncentreList[1].y;
 
-  /////////////////////////////
-  // Write map to text file for testing
-  //filename := 'output_cave.txt';
-  //AssignFile(myfile, filename);
-  //rewrite(myfile);
-  //for r := 1 to MAXROWS do
-  //begin
-  //  for c := 1 to MAXCOLUMNS do
-  //  begin
-  //    Write(myfile, caveArray[r][c]);
-  //  end;
-  //  Write(myfile, sLineBreak);
-  //end;
-  //closeFile(myfile);
-  //////////////////////////////
-
   process_cave.prettify;
-
-  /////////////////////////////
-  // Write map to text file for testing
-  //filename := 'output_processed_cave.txt';
-  //AssignFile(myfile, filename);
-  //rewrite(myfile);
-  //for r := 1 to MAXROWS do
-  //begin
-  //  for c := 1 to MAXCOLUMNS do
-  //  begin
-  //    Write(myfile, globalutils.dungeonArray[r][c]);
-  //  end;
-  //  Write(myfile, sLineBreak);
-  //end;
-  //closeFile(myfile);
-  //////////////////////////////
-
 
   (* Copy total rooms to main dungeon *)
   globalutils.currentDgnTotalRooms := totalRooms;

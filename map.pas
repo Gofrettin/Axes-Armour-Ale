@@ -33,7 +33,7 @@ type
 
 var
   (* Type of map: 0 = cave tunnels, 1 = blue grid-based dungeon, 2 = cavern, 3 = Bitmask dungeon *)
-  mapType: smallint;
+  mapType: byte;
   (* Game map array *)
   maparea: array[1..MAXROWS, 1..MAXCOLUMNS] of tile;
   r, c: smallint;
@@ -385,12 +385,6 @@ var
   // give each tile a unique ID number
   id_int: smallint;
 begin
-  case mapType of
-    0: cave.generate;
-    1: grid_dungeon.generate;
-    2: cavern.generate;
-    3: bitmask_dungeon.generate;
-  end;
   id_int := 0;
   for r := 1 to globalutils.MAXROWS do
   begin
