@@ -6,10 +6,20 @@ unit plot_gen;
 
 interface
 
+uses
+  Dos, SysUtils;
+
+const
+  DayStr: array[0..6] of string =
+    ('Fastday', 'Onesday', 'Twosday', 'Frogday', 'Hawksday', 'Feastday', 'Marketday');
+  MonthStr: array[1..12] of string =
+    ('Mistmon', 'Brittleice', 'Windmon', 'Gunther', 'Sweetbriar', 'Greenling',
+    'Frogsong', 'Sunmon', 'Southflight',
+    'Harvestmoon', 'Ghostmoon', 'Stormlight');
+
 var
-
-  playerName: string;
-
+  playerName, trollDate: string;
+  Year, Month, Day, WDay: word;
   firstSyllable: array[0..73] of
   string = ('A', 'Ag', 'Ar', 'Ara', 'Anu', 'Bal', 'Bil', 'Boro',
     'Bern', 'Bra', 'Cas', 'Cere', 'Co', 'Con', 'Cor', 'Dag', 'Doo',
@@ -100,6 +110,8 @@ var
 
 (* Generate a name for the player *)
 procedure generateName;
+(* Get the current date and display it in the in-game calendar *)
+procedure getTrollDate;
 
 implementation
 
@@ -110,6 +122,29 @@ begin
   a := Random(73);
   b := Random(62);
   playerName := firstSyllable[a] + secondSyllable[b];
+end;
+
+procedure getTrollDate;
+begin
+  Year := 0;
+  Month := 0;
+  Day := 0;
+  WDay := 0;
+  trollDate := '';
+  GetDate(Year, Month, Day, WDay);
+  trollDate := DayStr[WDay] + ', the ' + IntToStr(Day);
+  (* Add suffix *)
+  if (Day = 11) or (Day = 12) or (Day = 13) then
+    trollDate := trollDate + 'th'
+  else if (Day mod 10 = 1) then
+    trollDate := trollDate + 'st'
+  else if (Day mod 10 = 2) then
+    trollDate := trollDate + 'nd'
+  else if (Day mod 10 = 3) then
+    trollDate := trollDate + 'rd'
+  else
+    trollDate := trollDate + 'th';
+  trollDate := trollDate + ' day of ' + MonthStr[Month];
 end;
 
 end.
