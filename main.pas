@@ -75,11 +75,12 @@ begin
   if (ParamCount = 2) then
   begin
     if (ParamStr(1) = '--seed') then
-      RandSeed := StrToInt(ParamStr(2))
+      RandSeed := StrToDWord(ParamStr(2))
     else
     begin
       (* Set random seed *)
       {$IFDEF Linux}
+      writeln('Not a valid parameter');
       RandSeed := RandSeed shl 8;
       {$ENDIF}
       {$IFDEF Windows}

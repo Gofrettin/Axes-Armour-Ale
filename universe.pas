@@ -28,6 +28,7 @@ type
     discoveredTiles: array[1..10, 1..MAXROWS, 1..MAXCOLUMNS] of boolean;
     (* stores whether each floor has been visited *)
     isVisited: array[1..10] of boolean;
+    totalRooms: array[1..10] of byte;
   end;
 
 var
@@ -42,9 +43,8 @@ var
   i: byte;
 begin
   // hardcoded values for testing
-  uniqueID := 3;
+  uniqueID := 1;
   title := 'Test dungeon';
-  dungeonType := 2;
   totalDepth := 3;
   currentDepth := 1;
   (* set each floor to unvisited *)
@@ -52,12 +52,17 @@ begin
   begin
     isVisited[i] := False;
   end;
-  (* select which type of dungeon to generate *)
-  case mapType of
-    0: cave.generate;
-    1: grid_dungeon.generate;
-    2: cavern.generate;
-    3: bitmask_dungeon.generate;
+
+  (* generate the dungeon *)
+  for i := 1 to totalDepth do
+  begin
+    (* select which type of dungeon to generate *)
+    case mapType of
+      0: cave.generate(i);
+      1: grid_dungeon.generate;
+      2: cavern.generate;
+      3: bitmask_dungeon.generate;
+    end;
   end;
 
 end;
