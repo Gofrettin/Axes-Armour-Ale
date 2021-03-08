@@ -14,22 +14,6 @@ const
   (* Width/Height of tiles is used as a multiplier in placing tiles *)
   tileSize = 10;
 
-type
-  (* Tiles that make up the game world *)
-  tile = record
-    (* Unique tile ID *)
-    id: smallint;
-    (* Does the tile block movement *)
-    Blocks: boolean;
-    (* Is the tile visible *)
-    Visible: boolean;
-    (* Is the tile occupied *)
-    Occupied: boolean;
-    (* Has the tile been discovered already *)
-    Discovered: boolean;
-    (* Character used to represent the tile *)
-    Glyph: char;
-  end;
 
 var
   (* Type of map: 0 = cave tunnels, 1 = blue grid-based dungeon, 2 = cavern, 3 = Bitmask dungeon *)
@@ -381,31 +365,8 @@ begin
 end;
 
 procedure setupMap;
-var
-  // give each tile a unique ID number
-  id_int: smallint;
 begin
-  id_int := 0;
-  for r := 1 to globalutils.MAXROWS do
-  begin
-    for c := 1 to globalutils.MAXCOLUMNS do
-    begin
-      Inc(id_int);
-      with maparea[r][c] do
-      begin
-        id := id_int;
-        Blocks := True;
-        Visible := False;
-        Discovered := False;
-        Occupied := False;
-        Glyph := globalutils.dungeonArray[r][c];
-      end;
-      if (globalutils.dungeonArray[r][c] = '.') or
-        (globalutils.dungeonArray[r][c] = ':') or
-        (globalutils.dungeonArray[r][c] = '|') then
-        maparea[r][c].Blocks := False;
-    end;
-  end;
+  { TODO 1 : Amend this procedure to load the current map from universe unit }
 end;
 
 (* Redraw all visible tiles *)

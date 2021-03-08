@@ -7,7 +7,7 @@ unit universe;
 interface
 
 uses
-  SysUtils, globalutils;
+  SysUtils, globalutils, cave, cavern, grid_dungeon, bitmask_dungeon;
 
 (* individual dungeon / cave *)
 type
@@ -33,38 +33,51 @@ type
 
 var
   dungeonList: array of dungeonLayout;
+  dungeonAmount: smallint;
 
-procedure createNewDungeon(mapType: byte);
+{ TODO 1 : Maintain a list of dungeon ID's and their coordinates on the world map }
+
+procedure createNewDungeon(idNumber, mapType: byte);
 
 implementation
 
-procedure createNewDungeon(mapType: byte);
+procedure createNewDungeon(idNumber, mapType: byte);
 var
   i: byte;
 begin
-  // hardcoded values for testing
-  uniqueID := 1;
-  title := 'Test dungeon';
-  totalDepth := 3;
-  currentDepth := 1;
-  (* set each floor to unvisited *)
-  for i := 1 to 10 do
-  begin
-    isVisited[i] := False;
-  end;
+  (* Add a dungeon to the list of dungeonList *)
+  dungeonAmount := length(dungeonList);
+  Inc(dungeonAmount);
+  SetLength(dungeonList, dungeonAmount);
 
-  (* generate the dungeon *)
-  for i := 1 to totalDepth do
+  (* Fill dungeon record with values *)
+  with dungeonList[dungeonAmount] do
   begin
-    (* select which type of dungeon to generate *)
-    case mapType of
-      0: cave.generate(i);
-      1: grid_dungeon.generate;
-      2: cavern.generate;
-      3: bitmask_dungeon.generate;
+    uniqueID := idNumber;
+    // hardcoded values for testing
+    title := 'First cave';
+    dungeonType := mapType;
+    totalDepth := 3;
+    currentDepth := 1;
+    (* set each floor to unvisited *)
+    for i := 1 to 10 do
+    begin
+      isVisited[i] := False;
     end;
-  end;
 
+    (* generate the dungeon *)
+    for i := 1 to totalDepth do
+    begin
+      (* select which type of dungeon to generate *)
+      case mapType of
+        0: cave.generate(i, dungeonAmount);
+        1: grid_dungeon.generate;
+        2: cavern.generate;
+        3: bitmask_dungeon.generate;
+      end;
+    end;
+
+  end;
 end;
 
 end.

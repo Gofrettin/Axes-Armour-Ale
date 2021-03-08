@@ -43,9 +43,6 @@ procedure leftToRight;
 
 implementation
 
-uses
-  universe;
-
 procedure leftToRight;
 var
   i, j, n, tempX, tempY: smallint;
@@ -422,18 +419,14 @@ begin
 
   (* set player start coordinates, and set it to stairs *)
   caveArray[globalutils.currentDgncentreList[1].y]
-    [globalutils.currentDgncentreList[1].x] := '<';
+    [globalutils.currentDgncentreList[1].x] := '.';
   map.startX := globalutils.currentDgncentreList[1].x;
   map.startY := globalutils.currentDgncentreList[1].y;
   (* Add stairs to the last room *)
 
   (* Bitmask the cave tiles *)
-  process_cave.prettify;
+  process_cave.prettify(floorNumber, dungeonAmount, totalRooms);
 
-  (* Store total number of rooms in this level *)
-  universe. := totalRooms;
-  (* Set flag for type of dungeon *)
-  map.mapType := 0;
 end;
 
 end.

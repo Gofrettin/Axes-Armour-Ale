@@ -8,23 +8,24 @@ unit process_cave;
 interface
 
 uses
-  SysUtils, globalutils;
+  SysUtils, globalutils, universe;
 
 var
   processed_cave: array[1..globalutils.MAXROWS, 1..globalutils.MAXCOLUMNS] of char;
 
 (* Process generated cave to add shaped walls *)
-procedure prettify;
+procedure prettify(floorNumber, dungeonAmount, rmtotal);
 
 implementation
 
 uses
   cave;
 
-procedure prettify;
+procedure prettify(floorNumber, dungeonAmount, rmtotal);
 var
-  tileCounter: smallint;
+  tileCounter, id_int: smallint;
 begin
+  id_int := 0;
   (* First pass for adding walls *)
   for r := 1 to globalutils.MAXROWS do
   begin
@@ -49,7 +50,7 @@ begin
         if (cave.caveArray[r - 1][c - 1] <> ':') then // NORTH WEST
           tileCounter := tileCounter + 128;
         case tileCounter of
-           0: processed_cave[r][c] := 'A';
+          0: processed_cave[r][c] := 'A';
           1: processed_cave[r][c] := 'B';
           4: processed_cave[r][c] := 'C';
           5: processed_cave[r][c] := 'D';
@@ -105,14 +106,30 @@ begin
   end;
 
 
-  // Update the original dungeon
+  (* set up the dungeon tiles *)
   for r := 1 to globalutils.MAXROWS do
   begin
     for c := 1 to globalutils.MAXCOLUMNS do
     begin
-      globalutils.dungeonArray[r][c] := processed_cave[r][c];
+      Inc(id_int);
+      with universe.dungeonList[dungeonAmount].dlevel[floorNumber][r][c] do
+      begin
+        id := id_int;
+        Blocks := True;
+        Visible := False;
+        Discovered := False;
+        Occupied := False;
+        Glyph := processed_cave[floorNumber][r][c];
+      end;
+      if (processed_cave[floorNumber][r][c] = '.') or
+        (processed_cave[floorNumber][r][c] = ':') or
+        (processed_cave[floorNumber][r][c] = '|') then
+        universe.dungeonList[dungeonAmount].dlevel[floorNumber][r][c].Blocks := False;
     end;
   end;
+
+  (* Store total number of rooms in this level *)
+  universe.dungeonList[dungeonAmount].totalRooms[floorNumber] := rmtotal;
 end;
 
 end.
