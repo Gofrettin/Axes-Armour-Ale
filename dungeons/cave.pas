@@ -18,7 +18,7 @@ type
 var
   r, c, i, p, t, listLength, firstHalf, lastHalf, iterations, tileCounter: smallint;
   caveArray, tempArray: array[1..globalutils.MAXROWS, 1..globalutils.MAXCOLUMNS] of char;
-  totalRooms, roomSquare: smallint;
+  totalRooms, roomSquare: byte;
   (* Player starting position *)
   startX, startY: smallint;
   (* start creating corridors once this rises above 1 *)
@@ -37,7 +37,7 @@ procedure createCorridor(fromX, fromY, toX, toY: smallint);
 (* Create a room *)
 procedure createRoom(gridNumber: smallint);
 (* Generate a cave *)
-procedure generate(totalFloors: byte);
+procedure generate(floorNumber: byte);
 (* sort room list in order from left to right *)
 procedure leftToRight;
 
@@ -425,7 +425,7 @@ begin
   (* Add stairs to the last room *)
 
   (* Bitmask the cave tiles *)
-  process_cave.prettify(floorNumber, dungeonAmount, totalRooms);
+  process_cave.prettify(floorNumber, totalRooms);
 
 end;
 

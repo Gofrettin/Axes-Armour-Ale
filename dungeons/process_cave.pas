@@ -14,14 +14,14 @@ var
   processed_cave: array[1..globalutils.MAXROWS, 1..globalutils.MAXCOLUMNS] of char;
 
 (* Process generated cave to add shaped walls *)
-procedure prettify(floorNumber, dungeonAmount, rmtotal);
+procedure prettify(floorNumber, rmtotal: byte);
 
 implementation
 
 uses
   cave;
 
-procedure prettify(floorNumber, dungeonAmount, rmtotal);
+procedure prettify(floorNumber, rmtotal: byte);
 var
   tileCounter, id_int: smallint;
 begin
@@ -119,11 +119,11 @@ begin
         Visible := False;
         Discovered := False;
         Occupied := False;
-        Glyph := processed_cave[floorNumber][r][c];
+        Glyph := processed_cave[r][c];
       end;
-      if (processed_cave[floorNumber][r][c] = '.') or
-        (processed_cave[floorNumber][r][c] = ':') or
-        (processed_cave[floorNumber][r][c] = '|') then
+      if (processed_cave[r][c] = '.') or
+        (processed_cave[r][c] = ':') or
+        (processed_cave[r][c] = '|') then
         universe.dungeonList[dungeonAmount].dlevel[floorNumber][r][c].Blocks := False;
     end;
   end;
