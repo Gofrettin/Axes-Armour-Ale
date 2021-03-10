@@ -104,15 +104,13 @@ begin
       else
         processed_cave[r][c] := ':';
   end;
-
-
   (* set up the dungeon tiles *)
   for r := 1 to globalutils.MAXROWS do
   begin
     for c := 1 to globalutils.MAXCOLUMNS do
     begin
       Inc(id_int);
-      with universe.dungeonList[dungeonAmount].dlevel[floorNumber][r][c] do
+      with universe.dungeonList[0].dlevel[floorNumber][r][c] do
       begin
         id := id_int;
         Blocks := True;
@@ -121,15 +119,13 @@ begin
         Occupied := False;
         Glyph := processed_cave[r][c];
       end;
-      if (processed_cave[r][c] = '.') or
-        (processed_cave[r][c] = ':') or
-        (processed_cave[r][c] = '|') then
-        universe.dungeonList[dungeonAmount].dlevel[floorNumber][r][c].Blocks := False;
+      if (processed_cave[r][c] = ':') then
+        universe.dungeonList[0].dlevel[floorNumber][r][c].Blocks := False;
     end;
   end;
 
   (* Store total number of rooms in this level *)
-  universe.dungeonList[dungeonAmount].totalRooms[floorNumber] := rmtotal;
+  universe.dungeonList[0].totalRooms[floorNumber] := rmtotal;
 end;
 
 end.

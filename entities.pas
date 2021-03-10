@@ -9,7 +9,7 @@ unit entities;
 interface
 
 uses
-  Graphics, SysUtils, map, globalutils, ui, items,
+  Graphics, SysUtils, map, globalutils, universe, ui, items,
   (* Import item-style entities *)
   barrel,
   (* Import the NPC's *)
@@ -118,7 +118,7 @@ procedure spawnNPCs;
 var
   i, r, c, percentage: smallint;
 begin
-   npcAmount := (globalutils.currentDgnTotalRooms + 2);
+  npcAmount := (universe.dungeonList[0].totalRooms[1] + 2);
   (*  initialise array *)
   SetLength(entityList, 0);
   (* Add player to Entity list *)

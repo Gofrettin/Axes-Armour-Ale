@@ -83,7 +83,7 @@ procedure drawTile(c, r: smallint; hiDef: byte);
 implementation
 
 uses
-  cave, grid_dungeon, cavern, bitmask_dungeon, entities;
+  bitmask_dungeon, entities, universe;
 
 procedure setupTiles;
 begin
@@ -366,7 +366,24 @@ end;
 
 procedure setupMap;
 begin
-  { TODO 1 : Amend this procedure to load the current map from universe unit }
+  r := 1;
+  c := 1;
+  (* set up the dungeon tiles *)
+  for r := 1 to globalutils.MAXROWS do
+  begin
+    for c := 1 to globalutils.MAXCOLUMNS do
+    begin
+      with maparea[r][c] do
+      begin
+        id := universe.dungeonList[0].dlevel[1][r][c].id;
+        Blocks := universe.dungeonList[0].dlevel[1][r][c].Blocks;
+        Visible := universe.dungeonList[0].dlevel[1][r][c].Visible;
+        Discovered := universe.dungeonList[0].dlevel[1][r][c].Discovered;
+        Occupied := universe.dungeonList[0].dlevel[1][r][c].Occupied;
+        Glyph := universe.dungeonList[0].dlevel[1][r][c].Glyph;
+      end;
+    end;
+  end;
 end;
 
 (* Redraw all visible tiles *)

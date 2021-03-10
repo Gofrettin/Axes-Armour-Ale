@@ -23,7 +23,7 @@ type
     (* current floor the player is on *)
     currentDepth: byte;
     (* array of dungeon floor maps *)
-    dlevel: array[1..10, 1..MAXROWS, 1..MAXCOLUMNS] of tile;
+    dlevel: array[0..10, 1..MAXROWS, 1..MAXCOLUMNS] of tile;
     (* stores which parts of each floor is discovered *)
     discoveredTiles: array[1..10, 1..MAXROWS, 1..MAXCOLUMNS] of boolean;
     (* stores whether each floor has been visited *)
@@ -54,7 +54,7 @@ begin
   SetLength(dungeonList, dungeonAmount);
 
   (* Fill dungeon record with values *)
-  with dungeonList[dungeonAmount] do
+  with dungeonList[0] do
   begin
     uniqueID := idNumber;
     // hardcoded values for testing
