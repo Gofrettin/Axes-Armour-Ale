@@ -8,7 +8,7 @@ unit cave;
 interface
 
 uses
-  globalutils, map, process_cave;
+  globalutils, map, process_cave, SysUtils;
 
 type
   coordinates = record
@@ -23,6 +23,9 @@ var
   startX, startY: smallint;
   (* start creating corridors once this rises above 1 *)
   roomCounter: smallint;
+  (* TESTING - Write cave to text file *)
+  filename: ShortString;
+  myfile: Text;
 
 (* Draw straight line between 2 points *)
 procedure drawLine(x1, y1, x2, y2: smallint);
@@ -419,13 +422,29 @@ begin
 
   (* set player start coordinates, and set it to stairs *)
   caveArray[globalutils.currentDgncentreList[1].y]
-    [globalutils.currentDgncentreList[1].x] := '.';
+    [globalutils.currentDgncentreList[1].x] := ':';
   map.startX := globalutils.currentDgncentreList[1].x;
   map.startY := globalutils.currentDgncentreList[1].y;
   (* Add stairs to the last room *)
 
   (* Bitmask the cave tiles *)
   process_cave.prettify(floorNumber, totalRooms);
+
+  /////////////////////////////
+  // Write map to text file for testing
+  filename := 'cave_level_'+IntToStr(floorNumber) + '.txt';
+  AssignFile(myfile, filename);
+  rewrite(myfile);
+  for r := 1 to MAXROWS do
+  begin
+    for c := 1 to MAXCOLUMNS do
+    begin
+      Write(myfile, caveArray[r][c]);
+    end;
+    Write(myfile, sLineBreak);
+  end;
+  closeFile(myfile);
+  //////////////////////////////
 
 end;
 
