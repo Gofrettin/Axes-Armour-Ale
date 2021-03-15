@@ -518,8 +518,6 @@ begin
   map.caveWall2Hi.Free;
   map.caveWall3Def.Free;
   map.caveWall3Hi.Free;
-  map.downStairs.Free;
-  map.upStairs.Free;
   map.bmDungeon3Def.Free;
   map.bmDungeon3Hi.Free;
   map.bmDungeon5Def.Free;
@@ -643,6 +641,10 @@ begin
   cave253Hi.Free;
   cave255Def.Free;
   cave255Hi.Free;
+  dStairsDef_cave.Free;
+  dStairsHi_cave.Free;
+  uStairsDef_cave.Free;
+  uStairsHi_cave.Free;
   (* Item sprites *)
   items.aleTankard.Free;
   items.wineFlask.Free;

@@ -424,7 +424,7 @@ begin
   if (floorNumber = 1) then
   begin
     caveArray[globalutils.currentDgncentreList[1].y]
-      [globalutils.currentDgncentreList[1].x] := ':';
+      [globalutils.currentDgncentreList[1].x] := '<';
     map.startX := globalutils.currentDgncentreList[1].x;
     map.startY := globalutils.currentDgncentreList[1].y;
   end;

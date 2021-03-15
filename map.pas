@@ -27,30 +27,30 @@ var
   { TODO : Move the code responsible for loading tiles into each specific unit. Cave tiles are loaded from the cave generator etc... }
   caveWallHi, caveWallDef, caveFloorHi, caveFloorDef, blueDungeonWallHi,
   blueDungeonWallDef, blueDungeonFloorHi, blueDungeonFloorDef,
-  caveWall2Def, caveWall2Hi, caveWall3Def, caveWall3Hi, upStairs,
-  downStairs, bmDungeon3Hi, bmDungeon3Def, bmDungeon5Hi, bmDungeon5Def,
-  bmDungeon6Hi, bmDungeon6Def, bmDungeon7Hi, bmDungeon7Def, bmDungeon9Hi,
-  bmDungeon9Def, bmDungeon10Hi, bmDungeon10Def, bmDungeon11Hi,
-  bmDungeon11Def, bmDungeon12Hi, bmDungeon12Def, bmDungeon13Hi,
-  bmDungeon13Def, bmDungeon14Hi, bmDungeon14Def, bmDungeonBLHi,
-  bmDungeonBLDef, bmDungeonBRHi, bmDungeonBRDef, bmDungeonTLHi,
-  bmDungeonTLDef, bmDungeonTRHi, bmDungeonTRDef, greyFloorHi, greyFloorDef,
-  blankTile, cave1Def, cave1Hi, cave4Def, cave4Hi, cave5Def, cave5Hi,
-  cave7Def, cave7Hi, cave16Def, cave16Hi, cave17Def, cave17Hi, cave20Def,
-  cave20Hi, cave21Def, cave21Hi, cave23Def, cave23Hi, cave28Def,
-  cave28Hi, cave29Def, cave29Hi, cave31Def, cave31Hi, cave64Def,
-  cave64Hi, cave65Def, cave65Hi, cave68Def, cave68Hi, cave69Def,
-  cave69Hi, cave71Def, cave71Hi, cave80Def, cave80Hi, cave81Def,
-  cave81Hi, cave84Def, cave84Hi, cave85Def, cave85Hi, cave87Def,
-  cave87Hi, cave92Def, cave92Hi, cave93Def, cave93Hi, cave95Def,
-  cave95Hi, cave112Def, cave112Hi, cave113Def, cave113Hi, cave116Def,
-  cave116Hi, cave117Def, cave117Hi, cave119Def, cave119Hi, cave124Def,
-  cave124Hi, cave125Def, cave125Hi, cave127Def, cave127Hi, cave193Def,
-  cave193Hi, cave197Def, cave197Hi, cave199Def, cave199Hi, cave209Def,
-  cave209Hi, cave213Def, cave213Hi, cave215Def, cave215Hi, cave221Def,
-  cave221Hi, cave223Def, cave223Hi, cave241Def, cave241Hi, cave245Def,
-  cave245Hi, cave247Def, cave247Hi, cave253Def, cave253Hi, cave255Def,
-  cave255Hi: TBitmap;
+  caveWall2Def, caveWall2Hi, caveWall3Def, caveWall3Hi, bmDungeon3Hi,
+  bmDungeon3Def, bmDungeon5Hi, bmDungeon5Def, bmDungeon6Hi, bmDungeon6Def,
+  bmDungeon7Hi, bmDungeon7Def, bmDungeon9Hi, bmDungeon9Def, bmDungeon10Hi,
+  bmDungeon10Def, bmDungeon11Hi, bmDungeon11Def, bmDungeon12Hi,
+  bmDungeon12Def, bmDungeon13Hi, bmDungeon13Def, bmDungeon14Hi,
+  bmDungeon14Def, bmDungeonBLHi, bmDungeonBLDef, bmDungeonBRHi,
+  bmDungeonBRDef, bmDungeonTLHi, bmDungeonTLDef, bmDungeonTRHi,
+  bmDungeonTRDef, greyFloorHi, greyFloorDef, blankTile, cave1Def,
+  cave1Hi, cave4Def, cave4Hi, cave5Def, cave5Hi, cave7Def, cave7Hi,
+  cave16Def, cave16Hi, cave17Def, cave17Hi, cave20Def, cave20Hi,
+  cave21Def, cave21Hi, cave23Def, cave23Hi, cave28Def, cave28Hi,
+  cave29Def, cave29Hi, cave31Def, cave31Hi, cave64Def, cave64Hi,
+  cave65Def, cave65Hi, cave68Def, cave68Hi, cave69Def, cave69Hi,
+  cave71Def, cave71Hi, cave80Def, cave80Hi, cave81Def, cave81Hi,
+  cave84Def, cave84Hi, cave85Def, cave85Hi, cave87Def, cave87Hi,
+  cave92Def, cave92Hi, cave93Def, cave93Hi, cave95Def, cave95Hi,
+  cave112Def, cave112Hi, cave113Def, cave113Hi, cave116Def, cave116Hi,
+  cave117Def, cave117Hi, cave119Def, cave119Hi, cave124Def, cave124Hi,
+  cave125Def, cave125Hi, cave127Def, cave127Hi, cave193Def, cave193Hi,
+  cave197Def, cave197Hi, cave199Def, cave199Hi, cave209Def, cave209Hi,
+  cave213Def, cave213Hi, cave215Def, cave215Hi, cave221Def, cave221Hi,
+  cave223Def, cave223Hi, cave241Def, cave241Hi, cave245Def, cave245Hi,
+  cave247Def, cave247Hi, cave253Def, cave253Hi, cave255Def, cave255Hi,
+  dStairsDef_cave, dStairsHi_cave, uStairsDef_cave, uStairsHi_cave: TBitmap;
 
 
 (* Load tile textures *)
@@ -276,6 +276,15 @@ begin
   caveFloorHi.LoadFromResourceName(HINSTANCE, 'CAVEFLOORHI');
   caveFloorDef := TBitmap.Create;
   caveFloorDef.LoadFromResourceName(HINSTANCE, 'CAVEFLOORDEF');
+  // Stairs
+  uStairsDef_cave := TBitmap.Create;
+  uStairsDef_cave.LoadFromResourceName(HINSTANCE, 'USTAIRSDEF_CAVE');
+  uStairsHi_cave := TBitmap.Create;
+  uStairsHi_cave.LoadFromResourceName(HINSTANCE, 'USTAIRSHI_CAVE');
+  dStairsDef_cave := TBitmap.Create;
+  dStairsDef_cave.LoadFromResourceName(HINSTANCE, 'DSTAIRSDEF_CAVE');
+  dStairsHi_cave := TBitmap.Create;
+  dStairsHi_cave.LoadFromResourceName(HINSTANCE, 'DSTAIRSHI_CAVE');
   // Blue dungeon tiles
   blueDungeonWallHi := TBitmap.Create;
   blueDungeonWallHi.LoadFromResourceName(HINSTANCE, 'BLUEDUNGEONWALLHI');
@@ -294,11 +303,6 @@ begin
   caveWall3Def.LoadFromResourceName(HINSTANCE, 'CAVEWALL3DEF');
   caveWall3Hi := TBitmap.Create;
   caveWall3Hi.LoadFromResourceName(HINSTANCE, 'CAVEWALL3HI');
-  // Stairs
-  upStairs := TBitmap.Create;
-  upStairs.LoadFromResourceName(HINSTANCE, 'USTAIRS');
-  downStairs := TBitmap.Create;
-  downStairs.LoadFromResourceName(HINSTANCE, 'DSTAIRS');
   // Bitmask dungeon tiles
   bmDungeon3Def := TBitmap.Create;
   bmDungeon3Def.LoadFromResourceName(HINSTANCE, '3DEF');
@@ -802,6 +806,13 @@ begin
           drawToBuffer(mapToScreen(c), mapToScreen(r), cave255Hi)
         else
           drawToBuffer(mapToScreen(c), mapToScreen(r), cave255Def);
+      end;
+      '<': // Cave stairs up
+      begin
+        if (hiDef = 1) then
+          drawToBuffer(mapToScreen(c), mapToScreen(r), uStairsHi_cave)
+        else
+          drawToBuffer(mapToScreen(c), mapToScreen(r), uStairsDef_cave);
       end
       else
         if (hiDef = 1) then
