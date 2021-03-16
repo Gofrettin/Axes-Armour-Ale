@@ -103,6 +103,8 @@ begin
       end
       else if (cave.caveArray[r][c] = '<') then
         processed_cave[r][c] := '<'
+      else if (cave.caveArray[r][c] = '>') then
+        processed_cave[r][c] := '>'
       else
         processed_cave[r][c] := ':';
   end;
@@ -121,7 +123,8 @@ begin
         Occupied := False;
         Glyph := processed_cave[r][c];
       end;
-      if (processed_cave[r][c] = ':') or (processed_cave[r][c] = '<') then
+      if (processed_cave[r][c] = ':') or (processed_cave[r][c] = '<') or
+        (processed_cave[r][c] = '>') then
         universe.dungeonList[0].dlevel[floorNumber][r][c].Blocks := False;
     end;
   end;

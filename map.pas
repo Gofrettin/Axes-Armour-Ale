@@ -813,6 +813,13 @@ begin
           drawToBuffer(mapToScreen(c), mapToScreen(r), uStairsHi_cave)
         else
           drawToBuffer(mapToScreen(c), mapToScreen(r), uStairsDef_cave);
+      end;
+      '>': // Cave stairs down
+      begin
+        if (hiDef = 1) then
+          drawToBuffer(mapToScreen(c), mapToScreen(r), dStairsHi_cave)
+        else
+          drawToBuffer(mapToScreen(c), mapToScreen(r), dStairsDef_cave);
       end
       else
         if (hiDef = 1) then

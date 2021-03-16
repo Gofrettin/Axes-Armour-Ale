@@ -163,8 +163,8 @@
         <Resource_145 FileName="images\dungeon\ascii\cave-253-hi.bmp" Type="BITMAP" ResourceName="CAVE-253-HI"/>
         <Resource_146 FileName="images\dungeon\ascii\cave-255-def.bmp" Type="BITMAP" ResourceName="CAVE-255-DEF"/>
         <Resource_147 FileName="images\dungeon\ascii\cave-255-hi.bmp" Type="BITMAP" ResourceName="CAVE-255-HI"/>
-        <Resource_148 FileName="images\dungeon\ascii\dstairsdef_cave.bmp" Type="BITMAP" ResourceName="DSTAIRSDEF_CAVE"/>
-        <Resource_149 FileName="images\dungeon\ascii\ustairsdef_cave.bmp" Type="BITMAP" ResourceName="USTAIRSDEF_CAVE"/>
+        <Resource_148 FileName="images\dungeon\ascii\ustairsdef_cave.bmp" Type="BITMAP" ResourceName="USTAIRSDEF_CAVE"/>
+        <Resource_149 FileName="images\dungeon\ascii\dstairsdef_cave.bmp" Type="BITMAP" ResourceName="DSTAIRSDEF_CAVE"/>
         <Resource_150 FileName="images\dungeon\ascii\dstairshi_cave.bmp" Type="BITMAP" ResourceName="DSTAIRSHI_CAVE"/>
         <Resource_151 FileName="images\dungeon\ascii\ustairshi_cave.bmp" Type="BITMAP" ResourceName="USTAIRSHI_CAVE"/>
       </Resources>

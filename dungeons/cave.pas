@@ -420,9 +420,11 @@ begin
     caveArray[r][c] := '*';
   end;
 
-  (* FIrst floor only, set player start coordinates, and set it to stairs *)
+  (* First floor only, set player start coordinates and place the stairs *)
   if (floorNumber = 1) then
   begin
+    caveArray[globalutils.currentDgncentreList[totalRooms].y]
+      [globalutils.currentDgncentreList[totalRooms].x] := '>';
     caveArray[globalutils.currentDgncentreList[1].y]
       [globalutils.currentDgncentreList[1].x] := '<';
     map.startX := globalutils.currentDgncentreList[1].x;
