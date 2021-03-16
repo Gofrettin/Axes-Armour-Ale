@@ -19,13 +19,14 @@ var
   r, c, i, p, t, listLength, firstHalf, lastHalf, iterations, tileCounter: smallint;
   caveArray, tempArray: array[1..globalutils.MAXROWS, 1..globalutils.MAXCOLUMNS] of char;
   totalRooms, roomSquare: byte;
-  (* Player starting position *)
-  startX, startY: smallint;
+  (* Player starting position and position of staircase leading to current floor *)
+  startX, startY, stairX, stairY: smallint;
   (* start creating corridors once this rises above 1 *)
   roomCounter: smallint;
+
   (* TESTING - Write cave to text file *)
-  //filename: ShortString;
-  //myfile: Text;
+  filename: ShortString;
+  myfile: Text;
 
 (* Draw straight line between 2 points *)
 procedure drawLine(x1, y1, x2, y2: smallint);
@@ -408,7 +409,7 @@ begin
   (* Add random pillars *)
   for pillars := 1 to randomRange(5, 10) do
   begin
-    //  (* Choose random location on the map *)
+    (* Choose random location on the map *)
     repeat
       r := globalutils.randomRange(1, MAXROWS);
       c := globalutils.randomRange(1, MAXCOLUMNS);
@@ -429,27 +430,40 @@ begin
       [globalutils.currentDgncentreList[1].x] := '<';
     map.startX := globalutils.currentDgncentreList[1].x;
     map.startY := globalutils.currentDgncentreList[1].y;
+    (* Store position of the staircase *)
+    stairX := globalutils.currentDgncentreList[totalRooms].x;
+    stairY := globalutils.currentDgncentreList[totalRooms].y;
   end;
 
+  (* HARD CODED TEST FOR SECOND FLOOR *)
+  if (floorNumber = 2) then
+  begin
+    if (caveArray[stairY][stairX] = ':') then
+      caveArray[stairY][stairX] := '<';
+  end;
+
+
+
   (* Add stairs to the last room *)
+
 
   (* Bitmask the cave tiles *)
   process_cave.prettify(floorNumber, totalRooms);
 
   /////////////////////////////
   // Write map to text file for testing
-  //filename := 'cave_level_' + IntToStr(floorNumber) + '.txt';
-  //AssignFile(myfile, filename);
-  //rewrite(myfile);
-  //for r := 1 to MAXROWS do
-  //begin
-  //  for c := 1 to MAXCOLUMNS do
-  //  begin
-  //    Write(myfile, caveArray[r][c]);
-  //  end;
-  //  Write(myfile, sLineBreak);
-  //end;
-  //closeFile(myfile);
+  filename := 'cave_level_' + IntToStr(floorNumber) + '.txt';
+  AssignFile(myfile, filename);
+  rewrite(myfile);
+  for r := 1 to MAXROWS do
+  begin
+    for c := 1 to MAXCOLUMNS do
+    begin
+      Write(myfile, caveArray[r][c]);
+    end;
+    Write(myfile, sLineBreak);
+  end;
+  closeFile(myfile);
   //////////////////////////////
 
 end;
