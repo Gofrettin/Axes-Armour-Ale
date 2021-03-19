@@ -8,25 +8,33 @@ unit cave;
 interface
 
 uses
-  globalutils, map, process_cave, SysUtils;
+  globalutils, map, process_cave, SysUtils, Classes;
+
+const
+  BLOCKVALUE = 99;
 
 type
   coordinates = record
     x, y: smallint;
   end;
 
+type
+  TDist = array [1..MAXROWS, 1..MAXCOLUMNS] of integer;
+  Tbkinds = (bWall, bClear);
+
 var
   r, c, i, p, t, listLength, firstHalf, lastHalf, iterations, tileCounter: smallint;
-  caveArray, tempArray: array[1..globalutils.MAXROWS, 1..globalutils.MAXCOLUMNS] of char;
+  caveArray, tempArray: array[1..globalutils.MAXROWS, 1..globalutils.MAXCOLUMNS] of
+  shortstring;
   totalRooms, roomSquare: byte;
   (* Player starting position and position of staircase leading to current floor *)
   startX, startY, stairX, stairY: smallint;
   (* start creating corridors once this rises above 1 *)
   roomCounter: smallint;
-
+  distances: TDist;
   (* TESTING - Write cave to text file *)
-  filename: ShortString;
-  myfile: Text;
+  //filename: ShortString;
+  //myfile: Text;
 
 (* Draw straight line between 2 points *)
 procedure drawLine(x1, y1, x2, y2: smallint);
@@ -44,6 +52,10 @@ procedure createRoom(gridNumber: smallint);
 procedure generate(floorNumber: byte);
 (* sort room list in order from left to right *)
 procedure leftToRight;
+(* Determines if a tile is a wall or not *)
+function blockORnot(x, y: integer): Tbkinds;
+(* Floodfill cave to find unreachable areas *)
+procedure calcDistances(x, y: smallint);
 
 implementation
 
@@ -66,6 +78,50 @@ begin
         globalutils.currentDgncentreList[j + 1].x := tempX;
         globalutils.currentDgncentreList[j + 1].y := tempY;
       end;
+end;
+
+function blockORnot(x, y: integer): Tbkinds;
+begin
+  if (caveArray[y][x] = '*') then
+    Result := bWall
+  else if (caveArray[y][x] = ':') then
+    Result := bClear
+  else
+    Result := bWall;
+end;
+
+procedure calcDistances(x, y: smallint);
+(* Check within boundaries of map *)
+  function rangeok(x, y: smallint): boolean;
+  begin
+    Result := (x in [2..MAXCOLUMNS - 1]) and (y in [2..MAXROWS - 1]);
+  end;
+
+  (* Set distance around current tile *)
+  procedure setaround(x, y: smallint; d: smallint);
+  const
+    r: array[1..4] of tpoint =              // the four directions of movement
+      ((x: 0; y: -1), (x: 1; y: 0), (x: 0; y: 1), (x: -1; y: 0));
+  var
+    a: smallint;
+    dx, dy: smallint;
+  begin
+    for a := 1 to 4 do
+    begin
+      dx := x + r[a].x;
+      dy := y + r[a].y;
+      if rangeok(dx, dy) and (blockORnot(dx, dy) = bClear) and
+        (d < distances[dy, dx]) then
+      begin
+        distances[dy, dx] := d;
+        setaround(dx, dy, d + 1);
+      end;
+    end;
+  end;
+
+begin
+  distances[x, y] := 0;
+  setaround(x, y, 1);
 end;
 
 procedure drawLine(x1, y1, x2, y2: smallint);
@@ -421,6 +477,39 @@ begin
     caveArray[r][c] := '*';
   end;
 
+  (* Flood fill the map, removing any areas that can't be reached *)
+  (* Initialise distance map *)
+  for r := 1 to MAXROWS do
+  begin
+    for c := 1 to MAXCOLUMNS do
+    begin
+      distances[r, c] := BLOCKVALUE;
+    end;
+  end;
+  calcDistances(globalutils.currentDgncentreList[1].X,
+    globalutils.currentDgncentreList[1].y);
+  (* Floodfill the map *)
+  for r := 1 to MAXROWS do
+  begin
+    for c := 1 to MAXCOLUMNS do
+    begin
+      caveArray[r][c] := IntToStr(distances[r, c]);
+    end;
+  end;
+
+  (* Change unreachable areas to walls *)
+  for r := 1 to MAXROWS do
+  begin
+    for c := 1 to MAXCOLUMNS do
+    begin
+      if (caveArray[r][c] = '99') then
+        caveArray[r][c] := '*'
+      else
+        caveArray[r][c] := ':';
+    end;
+  end;
+  (* End of floodfill   *)
+
   (* First floor only, set player start coordinates and place the stairs *)
   if (floorNumber = 1) then
   begin
@@ -452,18 +541,18 @@ begin
 
   /////////////////////////////
   // Write map to text file for testing
-  filename := 'cave_level_' + IntToStr(floorNumber) + '.txt';
-  AssignFile(myfile, filename);
-  rewrite(myfile);
-  for r := 1 to MAXROWS do
-  begin
-    for c := 1 to MAXCOLUMNS do
-    begin
-      Write(myfile, caveArray[r][c]);
-    end;
-    Write(myfile, sLineBreak);
-  end;
-  closeFile(myfile);
+  //filename := 'cave_level_' + IntToStr(floorNumber) + '.txt';
+  //AssignFile(myfile, filename);
+  //rewrite(myfile);
+  //for r := 1 to MAXROWS do
+  //begin
+  //  for c := 1 to MAXCOLUMNS do
+  //  begin
+  //    Write(myfile, caveArray[r][c]);
+  //  end;
+  //  Write(myfile, sLineBreak);
+  //end;
+  //closeFile(myfile);
   //////////////////////////////
 
 end;
