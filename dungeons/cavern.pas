@@ -8,16 +8,25 @@ unit cavern;
 interface
 
 uses
-  globalutils, map;
+  globalutils, map, process_cave, SysUtils, Classes;
+
+const
+  BLOCKVALUE = 99;
 
 type
   coordinates = record
     x, y: smallint;
   end;
 
+type
+  TDist = array [1..MAXROWS, 1..MAXCOLUMNS] of integer;
+  Tbkinds = (bWall, bClear);
+
 var
-  terrainArray, tempArray, tempArray2: array[1..MAXROWS, 1..MAXCOLUMNS] of char;
+  terrainArray, tempArray, tempArray2: array[1..MAXROWS, 1..MAXCOLUMNS] of shortstring;
   r, c, i, iterations, tileCounter: smallint;
+  totalRooms: byte;
+  distances: TDist;
   (* TESTING - Write cavern to text file *)
   filename: ShortString;
   myfile: Text;
@@ -26,8 +35,14 @@ var
 procedure fillWithWalls;
 (* Fill array with random tiles *)
 procedure randomTileFill;
-(* Generate a cavern *)
-procedure generate;
+(* Dig out the cave *)
+procedure digCave(floorNumber: byte);
+(* Generate a caves and place the stairs *)
+procedure generate(floorNumber, lastFloor: byte);
+(* Determines if a tile is a wall or not *)
+function blockORnot(x, y: integer): Tbkinds;
+(* Floodfill cave to find unreachable areas *)
+procedure calcDistances(x, y: smallint);
 
 implementation
 
@@ -57,9 +72,8 @@ begin
   end;
 end;
 
-procedure generate;
+procedure digCave(floorNumber: byte);
 begin
-  // fill map with walls
   fillWithWalls;
   randomTileFill;
 
@@ -167,7 +181,7 @@ begin
         if (terrainArray[r][c] = '*') then
           terrainArray[r][c] := '*'
         else
-          terrainArray[r][c] := '#';
+          terrainArray[r][c] := '*';
       end
       else
         terrainArray[r][c] := '.';
@@ -185,26 +199,85 @@ begin
     terrainArray[i][1] := '*';
     terrainArray[i][MAXCOLUMNS] := '*';
   end;
-  // set player start coordinates
-  repeat
-    map.startX := Random(19) + 1;
-    map.startY := Random(19) + 1;
-  until (terrainArray[map.startY][map.startX] = '.');
+
+  (* Total rooms is used to calculate the number of NPC's *)
+  totalRooms := Random(5) + 10; // between 10 - 15 rooms
+
+  (* First floor only, set player start coordinates and place the stairs *)
+  if (floorNumber = 1) then
+  begin
+    repeat
+      map.startX := Random(19) + 1;
+      map.startY := Random(19) + 1;
+    until terrainArray[map.startY][map.startX] = '.';
+    //terrainArray[globalutils.currentDgncentreList[1].y]
+    //  [globalutils.currentDgncentreList[1].x] := '<';
+
+    (* Store position of the staircase *)
+    //stairX := globalutils.currentDgncentreList[totalRooms].x;
+    //stairY := globalutils.currentDgncentreList[totalRooms].y;
+  end;
+
+  (* HARD CODED TEST FOR SECOND FLOOR *)
+  //if (floorNumber = 2) then
+  //begin
+  //  if (caveArray[stairY][stairX] = ':') then
+  //    caveArray[stairY][stairX] := '<';
+  //end;
+
+
+   (* Flood fill the map, removing any areas that can't be reached *)
+  (* Initialise distance map *)
+  for r := 1 to MAXROWS do
+  begin
+    for c := 1 to MAXCOLUMNS do
+    begin
+      distances[r, c] := BLOCKVALUE;
+    end;
+  end;
+  calcDistances(map.startX, map.startY);
+  (* Floodfill the map *)
+  for r := 1 to MAXROWS do
+  begin
+    for c := 1 to MAXCOLUMNS do
+    begin
+      terrainArray[r][c] := IntToStr(distances[r, c]);
+    end;
+  end;
+
+  (* Change unreachable areas to walls *)
+  for r := 1 to MAXROWS do
+  begin
+    for c := 1 to MAXCOLUMNS do
+    begin
+      if (terrainArray[r][c] = '99') then
+        terrainArray[r][c] := '*'
+      else
+        terrainArray[r][c] := '.';
+    end;
+  end;
+  (* End of floodfill   *)
+
+  (* Add stairs *)
+  terrainArray[map.startY][map.startX] := '<';
+
+  (* Bitmask the cave tiles *)
+  process_cave.prettify(floorNumber, totalRooms);
 
   /////////////////////////////
   // Write map to text file for testing
-  //filename:='output_cavern.txt';
-  //AssignFile(myfile, filename);
-  // rewrite(myfile);
-  // for r := 1 to MAXROWS do
-  //begin
-  //  for c := 1 to MAXCOLUMNS do
-  //  begin
-  // write(myfile,terrainArray[r][c]);
-  // end;
-  //  write(myfile, sLineBreak);
-  //  end;
-  // closeFile(myfile);
+  filename := 'cavern_level_' + IntToStr(floorNumber) + '.txt';
+  AssignFile(myfile, filename);
+  rewrite(myfile);
+  for r := 1 to MAXROWS do
+  begin
+    for c := 1 to MAXCOLUMNS do
+    begin
+      Write(myfile, terrainArray[r][c]);
+    end;
+    Write(myfile, sLineBreak);
+  end;
+  closeFile(myfile);
   //////////////////////////////
 
   // Copy array to main dungeon
@@ -215,10 +288,56 @@ begin
       globalutils.dungeonArray[r][c] := terrainArray[r][c];
     end;
   end;
-  (* Set 'room number' to set NPC amount *)
-  globalutils.currentDgnTotalRooms := 12;
-  (* Set flag for type of map *)
-  map.mapType := 2;
+
+end;
+
+procedure generate(floorNumber, lastFloor: byte);
+begin
+  digCave(floorNumber);
+end;
+
+function blockORnot(x, y: integer): Tbkinds;
+begin
+  if (terrainArray[y][x] = '*') then
+    Result := bWall
+  else if (terrainArray[y][x] = '.') then
+    Result := bClear
+  else
+    Result := bWall;
+end;
+
+procedure calcDistances(x, y: smallint);
+(* Check within boundaries of map *)
+  function rangeok(x, y: smallint): boolean;
+  begin
+    Result := (x in [2..MAXCOLUMNS - 1]) and (y in [2..MAXROWS - 1]);
+  end;
+
+  (* Set distance around current tile *)
+  procedure setaround(x, y: smallint; d: smallint);
+  const
+    r: array[1..4] of tpoint =              // the four directions of movement
+      ((x: 0; y: -1), (x: 1; y: 0), (x: 0; y: 1), (x: -1; y: 0));
+  var
+    a: smallint;
+    dx, dy: smallint;
+  begin
+    for a := 1 to 4 do
+    begin
+      dx := x + r[a].x;
+      dy := y + r[a].y;
+      if rangeok(dx, dy) and (blockORnot(dx, dy) = bClear) and
+        (d < distances[dy, dx]) then
+      begin
+        distances[dy, dx] := d;
+        setaround(dx, dy, d + 1);
+      end;
+    end;
+  end;
+
+begin
+  distances[x, y] := 0;
+  setaround(x, y, 1);
 end;
 
 end.

@@ -61,7 +61,7 @@ const
 var
   (* Turn counter *)
   playerTurn: integer;
-  dungeonArray: array[1..MAXROWS, 1..MAXCOLUMNS] of char;
+  dungeonArray: array[1..MAXROWS, 1..MAXCOLUMNS] of shortstring;
   (* Number of rooms in the current dungeon *)
   currentDgnTotalRooms: smallint;
   (* list of coordinates of centre of each room *)

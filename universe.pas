@@ -7,7 +7,7 @@ unit universe;
 interface
 
 uses
-  SysUtils, globalutils, cavern, grid_dungeon, bitmask_dungeon;
+  SysUtils, globalutils, grid_dungeon, bitmask_dungeon;
 
 (* individual dungeon / cave *)
 type
@@ -42,7 +42,7 @@ procedure createNewDungeon(idNumber, mapType: byte);
 implementation
 
 uses
-  cave;
+  cave, cavern;
 
 procedure createNewDungeon(idNumber, mapType: byte);
 var
@@ -73,9 +73,9 @@ begin
     begin
       (* select which type of dungeon to generate *)
       case mapType of
-        0: cave.generate(i);
+        0: cave.generate(i, totalDepth);
         1: grid_dungeon.generate;
-        2: cavern.generate;
+        2: cavern.generate(i, totalDepth);
         3: bitmask_dungeon.generate;
       end;
     end;

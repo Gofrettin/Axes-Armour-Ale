@@ -445,9 +445,9 @@ begin
   // New map generation section
   universe.dungeonAmount := 0;
   SetLength(universe.dungeonList, 0);
-  map.mapType := 0;
+  map.mapType := 2;
   (* first map is number 1, map type is a cave with tunnels *)
-  universe.createNewDungeon(1, map.mapType);
+  universe.createNewDungeon(2, map.mapType);
   (* Copy first dungeon to game map *)
   map.setupMap;
   map.setupTiles;

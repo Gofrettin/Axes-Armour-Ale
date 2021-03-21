@@ -19,7 +19,7 @@ procedure prettify(floorNumber, rmtotal: byte);
 implementation
 
 uses
-  cave;
+  cavern;
 
 procedure prettify(floorNumber, rmtotal: byte);
 var
@@ -30,24 +30,24 @@ begin
   for r := 1 to globalutils.MAXROWS do
   begin
     for c := 1 to globalutils.MAXCOLUMNS do
-      if (cave.caveArray[r][c] = '*') then
+      if (cavern.terrainArray[r][c] = '*') then
       begin
         tileCounter := 0;
-        if (cave.caveArray[r - 1][c] <> ':') then // NORTH
+        if (cavern.terrainArray[r - 1][c] <> '.') then // NORTH
           tileCounter := tileCounter + 1;
-        if (cave.caveArray[r - 1][c + 1] <> ':') then // NORTH EAST
+        if (cavern.terrainArray[r - 1][c + 1] <> '.') then // NORTH EAST
           tileCounter := tileCounter + 2;
-        if (cave.caveArray[r][c + 1] <> ':') then // EAST
+        if (cavern.terrainArray[r][c + 1] <> '.') then // EAST
           tileCounter := tileCounter + 4;
-        if (cave.caveArray[r + 1][c + 1] <> ':') then // SOUTH EAST
+        if (cavern.terrainArray[r + 1][c + 1] <> '.') then // SOUTH EAST
           tileCounter := tileCounter + 8;
-        if (cave.caveArray[r + 1][c] <> ':') then // SOUTH
+        if (cavern.terrainArray[r + 1][c] <> '.') then // SOUTH
           tileCounter := tileCounter + 16;
-        if (cave.caveArray[r + 1][c - 1] <> ':') then // SOUTH WEST
+        if (cavern.terrainArray[r + 1][c - 1] <> '.') then // SOUTH WEST
           tileCounter := tileCounter + 32;
-        if (cave.caveArray[r][c - 1] <> ':') then // WEST
+        if (cavern.terrainArray[r][c - 1] <> '.') then // WEST
           tileCounter := tileCounter + 64;
-        if (cave.caveArray[r - 1][c - 1] <> ':') then // NORTH WEST
+        if (cavern.terrainArray[r - 1][c - 1] <> '.') then // NORTH WEST
           tileCounter := tileCounter + 128;
         case tileCounter of
           0: processed_cave[r][c] := 'A';
@@ -101,12 +101,12 @@ begin
             processed_cave[r][c] := 'u';
         end;
       end
-      else if (cave.caveArray[r][c] = '<') then
+      else if (cavern.terrainArray[r][c] = '<') then
         processed_cave[r][c] := '<'
-      else if (cave.caveArray[r][c] = '>') then
+      else if (cavern.terrainArray[r][c] = '>') then
         processed_cave[r][c] := '>'
       else
-        processed_cave[r][c] := ':';
+        processed_cave[r][c] := '.';
   end;
   (* set up the dungeon tiles *)
   for r := 1 to globalutils.MAXROWS do
@@ -123,7 +123,7 @@ begin
         Occupied := False;
         Glyph := processed_cave[r][c];
       end;
-      if (processed_cave[r][c] = ':') or (processed_cave[r][c] = '<') or
+      if (processed_cave[r][c] = '.') or (processed_cave[r][c] = '<') or
         (processed_cave[r][c] = '>') then
         universe.dungeonList[0].dlevel[floorNumber][r][c].Blocks := False;
     end;

@@ -468,10 +468,10 @@ end;
 
 procedure drawTile(c, r: smallint; hiDef: byte);
 begin
-  if (mapType = 0) then
+  if (mapType = 2) then
   begin
     case maparea[r][c].glyph of
-      ':': // Cave Floor
+      '.': // Cave Floor
       begin
         if (hiDef = 1) then
           drawToBuffer(mapToScreen(c), mapToScreen(r), caveFloorHi)
@@ -844,32 +844,6 @@ begin
           drawToBuffer(mapToScreen(c), mapToScreen(r), blueDungeonWallHi)
         else
           drawToBuffer(mapToScreen(c), mapToScreen(r), blueDungeonWallDef);
-      end;
-    end;
-  end
-  else if (mapType = 2) then
-  begin
-    case maparea[r][c].glyph of
-      '.': // Cave Floor
-      begin
-        if (hiDef = 1) then
-          drawToBuffer(mapToScreen(c), mapToScreen(r), caveFloorHi)
-        else
-          drawToBuffer(mapToScreen(c), mapToScreen(r), caveFloorDef);
-      end;
-      '#': // Cavern wall 1
-      begin
-        if (hiDef = 1) then
-          drawToBuffer(mapToScreen(c), mapToScreen(r), caveWall2Hi)
-        else
-          drawToBuffer(mapToScreen(c), mapToScreen(r), caveWall2Def);
-      end;
-      '*': // Cavern wall 2
-      begin
-        if (hiDef = 1) then
-          drawToBuffer(mapToScreen(c), mapToScreen(r), caveWall3Hi)
-        else
-          drawToBuffer(mapToScreen(c), mapToScreen(r), caveWall3Def);
       end;
     end;
   end
